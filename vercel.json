@@ -6,9 +6,13 @@
   "functions": {
     "api/login.ts": { "runtime": "edge" },
     "api/logout.ts": { "runtime": "edge" },
-    "api/upload.ts": { "runtime": "nodejs18.x" }
+    "api/upload.ts": { "runtime": "nodejs18.x" },
+    "api/gate.ts": { "runtime": "edge" },
+    "api/gate-image.ts": { "runtime": "edge" }
   },
   "routes": [
+    { "src": "^/$", "dest": "/api/gate" },
+    { "src": "^/image/?$", "dest": "/api/gate-image" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/image", "dest": "/image.html" }
   ]
