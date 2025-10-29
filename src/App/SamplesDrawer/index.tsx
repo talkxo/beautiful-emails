@@ -45,7 +45,7 @@ export default function SamplesDrawer() {
 
           <Stack>
             <Button size="small" onClick={() => setImageDialogOpen(true)}>
-              Image Direct Link
+              Create image link
             </Button>
           </Stack>
         </Stack>

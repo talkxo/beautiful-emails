@@ -44,7 +44,7 @@ function App(): JSX.Element {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Stack spacing={2}>
-        <Typography variant="h5">Image Direct Link</Typography>
+        <Typography variant="h5">Create image link</Typography>
         <Typography variant="body2" color="text.secondary">
           Upload up to 5 images at a time. Max 500KB each.
         </Typography>

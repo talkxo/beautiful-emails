@@ -43,7 +43,7 @@ export default function ImageDirectLinkDialog({ open, onClose }: Props): JSX.Ele
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Image Direct Link</DialogTitle>
+      <DialogTitle>Create image link</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ pt: 1 }}>
           <Typography variant="body2" color="text.secondary">
