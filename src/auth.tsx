@@ -24,8 +24,17 @@ function Login(): JSX.Element {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ key }),
       });
-      const data = await resp.json();
-      if (!resp.ok) throw new Error(data?.error || 'Login failed');
+      const raw = await resp.text();
+      let data: any = null;
+      try {
+        data = JSON.parse(raw);
+      } catch (_e) {
+        data = null;
+      }
+      if (!resp.ok) {
+        const msg = (data && data.error) || raw || 'Login failed';
+        throw new Error(msg);
+      }
       location.reload();
     } catch (e) {
       setError((e as Error).message);
