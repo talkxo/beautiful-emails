@@ -1,6 +1,6 @@
-# @usewaypoint/editor-sample
+# emailBuilder.xo
 
-Use this as a sample to self-host EmailBuilder.js.
+Use this as a sample to self-host emailBuilder.xo.
 
 To run this locally, fork the repository and then in this directory run:
 
