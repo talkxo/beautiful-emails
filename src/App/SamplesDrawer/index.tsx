@@ -25,9 +25,10 @@ export default function SamplesDrawer() {
     >
       <Stack spacing={3} py={1} px={2} width={SAMPLES_DRAWER_WIDTH} justifyContent="space-between" height="100%">
         <Stack spacing={2} sx={{ '& .MuiButtonBase-root': { width: '100%', justifyContent: 'flex-start' } }}>
-          <Typography variant="h6" component="h1" sx={{ p: 0.75 }}>
-            emailBuilder.xo
-          </Typography>
+          <Stack sx={{ p: 0.75, lineHeight: 1 }}>
+            <Typography variant="h6" component="h1">emailSandbox</Typography>
+            <Typography variant="caption" color="text.secondary">Ladder Beta</Typography>
+          </Stack>
 
           <Stack alignItems="flex-start">
             <SidebarButton href="#">Empty</SidebarButton>
