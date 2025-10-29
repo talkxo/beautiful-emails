@@ -9,7 +9,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
     const provided = body?.key as string | undefined;
-    const master = process.env.MASTER_KEY;
+    const master = process.env.MASTER_KEY || (process.env as any).master_key;
     if (!master) return res.status(500).json({ error: 'Server not configured' });
     if (!provided || provided !== master) return res.status(401).json({ error: 'Invalid key' });
 
