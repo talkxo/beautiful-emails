@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Box, Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material';
 
 export function hasSession(): boolean {
   return typeof window !== 'undefined' && window.localStorage.getItem('auth_ok') === '1';
@@ -36,22 +37,38 @@ function Login(): JSX.Element {
   }
 
   return (
-    <div style={{ maxWidth: 360, margin: '20vh auto 0', padding: 24, border: '1px solid #eee', borderRadius: 8, fontFamily: 'ui-sans-serif, system-ui' }}>
-      <h3 style={{ margin: 0 }}>Sign in</h3>
-      <p style={{ color: '#666' }}>Enter master key to access the app.</p>
-      <input
-        type="password"
-        value={key}
-        onChange={(e) => setKey(e.target.value)}
-        placeholder="Master key"
-        style={{ width: '100%', padding: '10px 12px', marginTop: 8 }}
-        disabled={busy}
-      />
-      {error && <div style={{ color: 'crimson', marginTop: 8 }}>{error}</div>}
-      <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
-        <button onClick={submit} disabled={busy || !key}>Sign in</button>
-      </div>
-    </div>
+    <Box display="grid" alignItems="start" justifyContent="center" minHeight="100vh" sx={{ backgroundColor: '#f6f7f8', pt: { xs: 8, sm: 14 } }}>
+      <Card sx={{ width: 400, maxWidth: '90vw' }} elevation={1}>
+        <CardContent>
+          <Stack spacing={2}>
+            <Typography variant="h6">Sign in</Typography>
+            <Typography variant="body2" color="text.secondary">
+              Enter master key to access the app.
+            </Typography>
+            <TextField
+              type="password"
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+              placeholder="Master key"
+              size="small"
+              fullWidth
+              disabled={busy}
+              autoFocus
+            />
+            {error && (
+              <Typography variant="body2" color="error" sx={{ mt: -0.5 }}>
+                {error}
+              </Typography>
+            )}
+            <Stack direction="row" justifyContent="flex-start">
+              <Button variant="contained" onClick={submit} disabled={busy || !key}>
+                Sign in
+              </Button>
+            </Stack>
+          </Stack>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
 

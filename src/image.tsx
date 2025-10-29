@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Alert, Box, Button, Card, CardContent, Chip, Container, LinearProgress, List, ListItem, ListItemText, Stack, Typography } from '@mui/material';
 
 function App(): JSX.Element {
   const [files, setFiles] = useState<File[]>([]);
@@ -41,48 +42,62 @@ function App(): JSX.Element {
   }
 
   return (
-    <div style={{ maxWidth: 720, margin: '24px auto', padding: 24, fontFamily: 'ui-sans-serif, system-ui' }}>
-      <h2 style={{ margin: 0 }}>Image Direct Link</h2>
-      <p style={{ color: '#666' }}>Upload up to 5 images at a time. Max 500KB each.</p>
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Stack spacing={2}>
+        <Typography variant="h5">Image Direct Link</Typography>
+        <Typography variant="body2" color="text.secondary">
+          Upload up to 5 images at a time. Max 500KB each.
+        </Typography>
 
-      <input
-        type="file"
-        multiple
-        accept="image/*"
-        onChange={(e) => setFiles(Array.from(e.target.files || []))}
-        disabled={busy}
-      />
-      {tooMany && (
-        <div style={{ color: 'crimson', marginTop: 8 }}>You selected more than 5 files; only the first 5 will upload.</div>
-      )}
-      {invalidSizes.length > 0 && (
-        <div style={{ color: 'crimson', marginTop: 8 }}>
-          Files over 500KB: {invalidSizes.join(', ')}
-        </div>
-      )}
-
-      <div style={{ marginTop: 12 }}>
-        <button onClick={uploadAll} disabled={busy || files.length === 0}>Upload</button>
-      </div>
-
-      {results.length > 0 && (
-        <div style={{ marginTop: 16 }}>
-          {results.map((r) => (
-            <div key={r.name} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <span style={{ minWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name}</span>
-              {r.url ? (
-                <>
-                  <a href={r.url} target="_blank" rel="noreferrer">{r.url}</a>
-                  <button onClick={() => navigator.clipboard.writeText(r.url!)}>Copy</button>
-                </>
-              ) : (
-                <span style={{ color: 'crimson' }}>{r.error}</span>
+        <Card>
+          <CardContent>
+            <Stack spacing={2}>
+              <Box>
+                <Button variant="outlined" component="label" disabled={busy}>
+                  Select images
+                  <input hidden type="file" multiple accept="image/*" onChange={(e) => setFiles(Array.from(e.target.files || []))} />
+                </Button>
+                {files.length > 0 && (
+                  <Chip label={`${Math.min(files.length, 5)} selected`} size="small" sx={{ ml: 1 }} />
+                )}
+              </Box>
+              {tooMany && <Alert severity="warning">You selected more than 5 files; only the first 5 will upload.</Alert>}
+              {invalidSizes.length > 0 && (
+                <Alert severity="error">Files over 500KB: {invalidSizes.join(', ')}</Alert>
               )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+              <Stack direction="row" spacing={1}>
+                <Button variant="contained" onClick={uploadAll} disabled={busy || files.length === 0}>Upload</Button>
+                {busy && <LinearProgress sx={{ flex: 1, alignSelf: 'center' }} />}
+              </Stack>
+            </Stack>
+          </CardContent>
+        </Card>
+
+        {results.length > 0 && (
+          <Card>
+            <CardContent>
+              <Typography variant="subtitle1" gutterBottom>Results</Typography>
+              <List dense>
+                {results.map((r) => (
+                  <ListItem key={r.name} secondaryAction={r.url ? (
+                    <Stack direction="row" spacing={1}>
+                      <Button size="small" href={r.url} target="_blank">Open</Button>
+                      <Button size="small" onClick={() => navigator.clipboard.writeText(r.url!)}>Copy</Button>
+                    </Stack>
+                  ) : undefined}>
+                    <ListItemText
+                      primary={r.name}
+                      secondary={r.url ? r.url : r.error}
+                      secondaryTypographyProps={{ color: r.url ? 'text.secondary' : 'error.main' }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+          </Card>
+        )}
+      </Stack>
+    </Container>
   );
 }
 
