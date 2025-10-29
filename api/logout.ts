@@ -1,7 +1,7 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+export const config = { runtime: 'edge' };
 
-export default async function handler(_req: VercelRequest, res: VercelResponse) {
-  const isProd = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+export default async function handler(): Promise<Response> {
+  const isProd = (process.env as any).VERCEL_ENV === 'production' || (process.env as any).NODE_ENV === 'production';
   const cookie = [
     `__session=`,
     `Path=/`,
@@ -9,12 +9,12 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
     'HttpOnly',
     'SameSite=Lax',
     'Max-Age=0',
-  ]
-    .filter(Boolean)
-    .join('; ');
+  ].filter(Boolean).join('; ');
 
-  res.setHeader('Set-Cookie', cookie);
-  return res.status(200).json({ ok: true });
+  return new Response(JSON.stringify({ ok: true }), {
+    status: 200,
+    headers: { 'Set-Cookie': cookie, 'Content-Type': 'application/json' },
+  });
 }
 
 

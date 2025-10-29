@@ -1,35 +1,43 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+export const config = { runtime: 'edge' };
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method Not Allowed' });
+export default async function handler(request: Request): Promise<Response> {
+  if (request.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method Not Allowed' }), {
+      status: 405,
+      headers: { 'Allow': 'POST', 'Content-Type': 'application/json' },
+    });
   }
 
   try {
-    const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+    const body = await request.json().catch(() => ({}));
     const provided = body?.key as string | undefined;
-    const master = process.env.MASTER_KEY || (process.env as any).master_key;
-    if (!master) return res.status(500).json({ error: 'Server not configured' });
-    if (!provided || provided !== master) return res.status(401).json({ error: 'Invalid key' });
+    const master = (process.env as any).MASTER_KEY || (process.env as any).master_key;
+    if (!master) {
+      return new Response(JSON.stringify({ error: 'Server not configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    }
+    if (!provided || provided !== master) {
+      return new Response(JSON.stringify({ error: 'Invalid key' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+    }
 
-    const isProd = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+    const isProd = (process.env as any).VERCEL_ENV === 'production' || (process.env as any).NODE_ENV === 'production';
     const cookie = [
       `__session=ok`,
       `Path=/`,
       isProd ? 'Secure' : '',
       'HttpOnly',
       'SameSite=Lax',
-      // 12h expiry
       `Max-Age=${60 * 60 * 12}`,
-    ]
-      .filter(Boolean)
-      .join('; ');
+    ].filter(Boolean).join('; ');
 
-    res.setHeader('Set-Cookie', cookie);
-    return res.status(200).json({ ok: true });
-  } catch (e) {
-    return res.status(400).json({ error: 'Bad request' });
+    return new Response(JSON.stringify({ ok: true }), {
+      status: 200,
+      headers: {
+        'Set-Cookie': cookie,
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (_e) {
+    return new Response(JSON.stringify({ error: 'Bad request' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 }
 
