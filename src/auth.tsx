@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 export function hasSession(): boolean {
-  return typeof document !== 'undefined' && document.cookie.includes('__session=ok');
+  return typeof window !== 'undefined' && window.localStorage.getItem('auth_ok') === '1';
 }
 
 export function mountLogin(rootElement: HTMLElement): void {
@@ -19,22 +19,14 @@ function Login(): JSX.Element {
     setBusy(true);
     setError(null);
     try {
-      const resp = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ key }),
-      });
-      const raw = await resp.text();
-      let data: any = null;
-      try {
-        data = JSON.parse(raw);
-      } catch (_e) {
-        data = null;
-      }
-      if (!resp.ok) {
-        const msg = (data && data.error) || raw || 'Login failed';
-        throw new Error(msg);
-      }
+      const enc = new TextEncoder();
+      const hashBuf = await crypto.subtle.digest('SHA-256', enc.encode(key));
+      const bytes = Array.from(new Uint8Array(hashBuf));
+      const hex = bytes.map((b) => b.toString(16).padStart(2, '0')).join('');
+      const MASTER_HASH = (import.meta as any).env?.VITE_MASTER_HASH || '';
+      if (!MASTER_HASH) throw new Error('App not configured');
+      if (hex !== MASTER_HASH) throw new Error('Invalid key');
+      window.localStorage.setItem('auth_ok', '1');
       location.reload();
     } catch (e) {
       setError((e as Error).message);
