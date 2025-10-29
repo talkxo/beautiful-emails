@@ -5,12 +5,14 @@ import { Button, Divider, Drawer, Stack, Typography } from '@mui/material';
 import { useSamplesDrawerOpen } from '../../documents/editor/EditorContext';
 
 import SidebarButton from './SidebarButton';
+import ImageDirectLinkDialog from '../ImageDirectLinkDialog';
 // branding removed
 
 export const SAMPLES_DRAWER_WIDTH = 240;
 
 export default function SamplesDrawer() {
   const samplesDrawerOpen = useSamplesDrawerOpen();
+  const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
 
   return (
     <Drawer
@@ -42,13 +44,14 @@ export default function SamplesDrawer() {
           <Divider />
 
           <Stack>
-            <Button size="small" href="/image.html">
+            <Button size="small" onClick={() => setImageDialogOpen(true)}>
               Image Direct Link
             </Button>
           </Stack>
         </Stack>
         {/* branding removed */}
       </Stack>
+      <ImageDirectLinkDialog open={imageDialogOpen} onClose={() => setImageDialogOpen(false)} />
     </Drawer>
   );
 }
