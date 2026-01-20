@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bounce Salon — 2026 Media Command Center</title>
+
+<!-- TailwindCSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Vue 3 -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  .stat-card { background: white; border: 1px solid #e5e7eb; border-radius: 1.25rem; }
+  .segment-card { border: 1px solid #e5e7eb; border-radius: 1.75rem; background: white; }
+</style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 p-4 md:p-8">
+
+<div id="app" class="max-w-7xl mx-auto space-y-10">
+
+  <!-- HEADER / KPI SUMMARY -->
+  <header class="bg-white rounded-3xl shadow p-8 border border-slate-200 space-y-6">
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">BOUNCE SALON PILOT 2026</h1>
+        <p class="text-slate-600 font-medium">45-Day Performance Roadmap — Bangalore Market</p>
+      </div>
+
+      <div class="bg-indigo-600 px-6 py-3 rounded-2xl text-white shadow-lg">
+        <div class="text-xs uppercase tracking-widest font-bold opacity-80">Total Budget</div>
+        <div class="text-3xl font-extrabold">Rs 5,00,000</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div v-for="stat in mainStats" class="stat-card p-6 shadow-sm">
+        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{{ stat.label }}</div>
+        <div class="text-2xl font-extrabold text-indigo-700 mt-2">{{ stat.value }}</div>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- MEDIA SEGMENTS -->
+  <section>
+    <h2 class="text-xl font-extrabold mb-6 flex items-center gap-2">
+      <span class="w-2 h-6 bg-indigo-600 rounded-full"></span>
+      Media Segments & Channel Mix
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div v-for="(s, key) in segments" class="segment-card p-6 flex flex-col justify-between shadow-sm">
+        <div>
+          <div :class="s.color" class="w-10 h-10 rounded-xl mb-4 flex items-center justify-center text-white font-bold text-lg">
+            {{ key.slice(0,1).toUpperCase() }}
+          </div>
+          <h3 class="text-lg font-bold text-slate-800">{{ s.name }}</h3>
+          <p class="text-sm text-slate-500 mt-2 leading-relaxed">{{ s.objective }}</p>
+        </div>
+        <div class="mt-5 pt-4 border-t border-slate-100">
+          <div class="text-[10px] font-bold uppercase text-slate-400">Allocation</div>
+          <div class="text-xl font-bold text-slate-800">{{ s.allocation }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREATIVE & MESSAGING -->
+  <section class="bg-indigo-900 text-white rounded-3xl p-8 overflow-hidden">
+    <h2 class="text-xl font-bold mb-6">Creative & Messaging Pillars</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div v-for="s in segments" class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20">
+        <h4 class="text-indigo-200 font-bold text-xs uppercase tracking-widest mb-2">{{ s.name }}</h4>
+        <div class="font-bold text-sm mb-3">{{ s.creative.headline }}</div>
+        <ul class="space-y-2">
+          <li v-for="p in s.creative.points" class="text-xs opacity-80 flex gap-2">
+            <span class="text-indigo-300">•</span>{{ p }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPTIMIZATION ROADMAP -->
+  <section>
+    <h2 class="text-xl font-extrabold mb-6 flex items-center gap-2">
+      <span class="w-2 h-6 bg-orange-500 rounded-full"></span>
+      Optimization Roadmap (Days 1–45)
+    </h2>
+
+    <div class="space-y-4">
+      <div v-for="phase in monitoringPlan" class="bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row">
+        <div :class="phase.color" class="md:w-48 p-6 text-white text-center flex flex-col justify-center">
+          <div class="text-xs font-bold uppercase opacity-80">{{ phase.day }}</div>
+          <div class="font-bold text-lg leading-tight">{{ phase.phase }}</div>
+        </div>
+
+        <div class="flex-1 p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <div class="text-[10px] font-bold uppercase text-slate-400 mb-2">Metrics</div>
+              <p v-for="m in phase.metrics" class="text-sm text-slate-700 mb-1">• {{ m }}</p>
+            </div>
+            <div>
+              <div class="text-[10px] font-bold uppercase text-slate-400 mb-2">Actions</div>
+              <p v-for="a in phase.actions" class="text-sm text-slate-700 mb-1">• {{ a }}</p>
+            </div>
+            <div class="bg-slate-50 rounded-xl p-4">
+              <div class="text-[10px] font-bold uppercase text-green-600 mb-2">Success KPIs</div>
+              <p v-for="k in phase.kpis" class="text-sm font-bold text-slate-800 mb-1">• {{ k }}</p>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAST TRIGGERS -->
+  <footer class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+    <div class="bg-red-50 border border-red-100 p-8 rounded-3xl">
+      <h3 class="text-red-600 font-bold text-sm uppercase tracking-widest mb-4">Fast Kill Triggers</h3>
+      <ul class="space-y-2 text-sm text-red-800 font-medium">
+        <li>• CPM > Rs 500 for 3+ days</li>
+        <li>• CTR < 0.5% after Day 5</li>
+        <li>• No bookings after Rs 10K spend</li>
+        <li>• Cost/booking > Rs 800</li>
+      </ul>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-100 p-8 rounded-3xl">
+      <h3 class="text-emerald-600 font-bold text-sm uppercase tracking-widest mb-4">Fast Scale Triggers</h3>
+      <ul class="space-y-2 text-sm text-emerald-800 font-medium">
+        <li>• ROAS > 5x consistently</li>
+        <li>• CTR > 3% w/ stable conversion</li>
+        <li>• Cost/booking < Rs 300</li>
+        <li>• Show-up rate > 90%</li>
+      </ul>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+const { createApp } = Vue;
+createApp({
+  setup() {
+    return {
+      mainStats: [
+        { label: 'ROAS Goal', value: '4.0x' },
+        { label: 'Target Bookings', value: '1,667' },
+        { label: 'Estimated Traffic', value: '83K' },
+        { label: 'Revenue Goal', value: 'Rs 20L' }
+      ],
+      segments: {
+        offer: {
+          name: 'Offer Acquisition', allocation: '40%', color: 'bg-indigo-600',
+          objective: 'Drive first-time bookings with value offers.',
+          creative: { headline: 'Value-First Messaging', points: ['30% off first visit', 'Bundles @ Rs 2,999', 'Social proof grids'] }
+        },
+        hotService: {
+          name: 'Hot Services', allocation: '30%', color: 'bg-orange-500',
+          objective: 'Promote trending premium services.',
+          creative: { headline: 'Aspirational Content', points: ['Hero transformations', 'Stylist creds', 'Limited slots urgency'] }
+        },
+        retention: {
+          name: 'Retention Loop', allocation: '20%', color: 'bg-emerald-600',
+          objective: 'Retarget warm audiences + cart abandoners.',
+          creative: { headline: 'Reminder & Nurture', points: ['“Finish booking” prompts', 'VIP anniversary offers'] }
+        },
+        gifting: {
+          name: 'Viral Gifting', allocation: '10%', color: 'bg-pink-500',
+          objective: 'Gift cards + corporate wellness packs.',
+          creative: { headline: 'Emotional Hooks', points: ['Birthday experiences', 'B2B wellness vouchers'] }
+        }
+      },
+      monitoringPlan: [
+        { day: 'Day 1–3', phase: 'Launch', color: 'bg-blue-500', metrics: ['Pixel & tracking'], actions: ['Fix tech errors'], kpis: ['CTR > 1.5%'] },
+        { day: 'Day 4–15', phase: 'Analyze', color: 'bg-indigo-500', metrics: ['CPC', 'Cost/Booking'], actions: ['Pause weak ads', 'A/B test LP'], kpis: ['CPC < Rs 15'] },
+        { day: 'Day 16–35', phase: 'Scale', color: 'bg-emerald-600', metrics: ['ROAS', 'Show-rate'], actions: ['Scale winners', 'New creative variants'], kpis: ['ROAS > 3x'] },
+        { day: 'Day 36–45', phase: 'Final Push', color: 'bg-slate-900', metrics: ['Total Revenue'], actions: ['Maximize winners'], kpis: ['Revenue Rs 20L'] }
+      ]
+    };
+  }
+}).mount('#app');
+</script>
+
+</body>
+</html>
